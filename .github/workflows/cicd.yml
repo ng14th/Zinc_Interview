@@ -49,9 +49,7 @@ jobs:
           docker exec zinc_app_container make run-test
 
       - name: Run migrations
-        run: |
-          docker run -d --name zinc_app_container zinc_app:latest
-          docker exec zinc_app_container make run-migrations
+        run: docker exec zinc_app_container make run-migrations
         
       - name: Push to DockerHub
         run: |
