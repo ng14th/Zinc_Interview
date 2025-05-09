@@ -5,6 +5,10 @@ migrate:
 makemigrations:
 	python manage.py makemigrations
 
+run-migrations:
+	uv run python manage.py makemigrations
+	uv run python manage.py migrate
+
 run-test:
 	uv run python manage.py test tests --keepdb
 

@@ -47,12 +47,17 @@ jobs:
         run: |
           docker run -d --name zinc_app_container zinc_app:latest
           docker exec zinc_app_container make run-test
+
+      - name: Run migrations
+        run: |
+          docker run -d --name zinc_app_container zinc_app:latest
+          docker exec zinc_app_container make run-migrations
         
       - name: Push to DockerHub
         run: |
           echo "${{ secrets.TOKEN_DOCKER_HUB }}" | docker login -u ${{ secrets.USER_DOCKER_HUB }} --password-stdin
           docker tag zinc_app:latest ${{ secrets.USER_DOCKER_HUB }}/zinc_app:latest
-          docker push ${{ secrets.TOKEN_DOCKER_HUB }}/zinc_app:latest
+          docker push ${{ secrets.USER_DOCKER_HUB }}/zinc_app:latest
 
   # Deploy:
   # echo "${{ secrets.TOKEN_DOCKER_HUB }}" | docker login -u ${{ secrets.USER_DOCKER_HUB }} --password-stdin
