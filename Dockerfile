@@ -37,7 +37,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 WORKDIR /app/zinc_app
 
 # Healthcheck
-HEALTHCHECK --interval=15s --timeout=3s --retries=5 CMD curl --fail http://localhost:5000/health || exit 1
+HEALTHCHECK --interval=15s --timeout=3s --retries=5 CMD curl --fail http://localhost:5000/health/ || exit 1
 
 EXPOSE 5000
 
