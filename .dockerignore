@@ -1,0 +1,5 @@
+zinc_app/envs/.env
+__pycache__/
+.venv
+.git
+.github

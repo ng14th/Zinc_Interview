@@ -22,6 +22,13 @@ RUN pip3 install --no-cache-dir uv
 # Set working directory
 WORKDIR /app
 
+# Copy only pyproject files before full source for better layer caching
+COPY pyproject.toml uv.lock* /app/
+
+# Create venv and sync dependencies with cache
+RUN --mount=type=cache,target=/root/.cache \
+    uv venv && uv sync
+
 # Copy project files
 COPY . /app/
 
@@ -30,6 +37,9 @@ RUN uv venv && uv sync
 
 # Set working directory to your app
 WORKDIR /app/zinc_app
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=3s CMD curl --fail http://localhost:5000/health/ || exit 1
 
 EXPOSE 5000
 
