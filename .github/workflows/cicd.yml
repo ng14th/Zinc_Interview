@@ -14,8 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create .env
-        run: echo "DJANGO_SECRET_KEY=${{ secrets.ENV }}" >> zinc_app/envs/.env
+      # - name: Create .env
+      #   run: echo "DJANGO_SECRET_KEY=${{ secrets.ENV }}" >> zinc_app/envs/.env
         
       - name: Build image
         run: docker build -t zinc_app:latest .
@@ -43,9 +43,12 @@ jobs:
       - name: Load Zinc App image
         run: docker load -i zinc_app.tar
 
+      - name: Set up environment file
+        run: echo "${{ secrets.ENV }}" > .env
+
       - name: Run test
         run: |
-          docker run -d --name zinc_app_container zinc_app:latest
+          docker run -d --env-file .env --name zinc_app_container zinc_app:latest
           docker exec zinc_app_container make run-test
 
       - name: Run migrations
