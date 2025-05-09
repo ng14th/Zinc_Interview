@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: CI Zinc App
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: docker-image
+          name: zinc-app-image
           path: zinc_app.tar
 
 # --- Job 2: Test
@@ -37,10 +37,10 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: docker-image
+          name: zinc-app-image
           path: .
 
-      - name: Load Docker image
+      - name: Load Zinc App image
         run: docker load -i zinc_app.tar
 
       - name: Run test
