@@ -29,7 +29,7 @@ jobs:
           path: zinc_app.tar
 
 # --- Job 2: Test
-  Test and Push to DockerHub:
+  Test_and_Push_DockerHub:
     runs-on: ubuntu-latest
     needs: build
     steps:
