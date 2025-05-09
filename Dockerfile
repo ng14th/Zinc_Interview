@@ -1,12 +1,10 @@
-FROM python:3.12.3-alpine3.18
+FROM python:3.12.3-alpine
 
 # Install only essential build dependencies, and remove them after building
 RUN apk add --no-cache \
     make \
     gcc \
     curl \
-    htop \
-    vim \
     net-tools \
     libpq-dev \
     python3-dev \
@@ -26,20 +24,20 @@ WORKDIR /app
 COPY pyproject.toml uv.lock* /app/
 
 # Create venv and sync dependencies with cache
-RUN --mount=type=cache,target=/root/.cache \
-    uv venv && uv sync
+RUN --mount=type=cache,target=/root/.cache
 
 # Copy project files
 COPY . /app/
 
-# Create and sync virtual environment
-RUN uv venv && uv sync
+# Create venv and sync dependencies
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv venv && uv sync --frozen
 
 # Set working directory to your app
 WORKDIR /app/zinc_app
 
 # Healthcheck
-HEALTHCHECK --interval=30s --timeout=3s CMD curl --fail http://localhost:5000/health/ || exit 1
+HEALTHCHECK --interval=15s --timeout=3s --retries=5 CMD curl --fail http://localhost:5000/health || exit 1
 
 EXPOSE 5000
 
