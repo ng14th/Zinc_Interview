@@ -15,4 +15,6 @@ class HealthTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         data = response.json()
 
-        self.assertEqual(data["status"], "ok")
+        # self.assertEqual(data["status"], "ok")
+        # case fail
+        self.assertEqual(data["status"], "not ok")
