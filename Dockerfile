@@ -8,6 +8,9 @@ RUN apk add --no-cache \
     htop \
     vim \
     net-tools \
+    libpq-dev \
+    python3-dev \
+    build-base \
     && rm -rf /var/lib/apt/lists/*
 
 # Create required folders
