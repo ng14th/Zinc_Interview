@@ -1,5 +1,5 @@
 ## First install project
-- ***Install uv packe manage python at*** https://docs.astral.sh/uv/getting-started/installation/
+- ***Install uv package manage python at*** https://docs.astral.sh/uv/getting-started/installation/
   + **Using pip** : ***run*** ```pip/pip3 install uv```
   + **Using curl** : ***run*** ```curl -LsSf https://astral.sh/uv/install.sh | sh```
 
