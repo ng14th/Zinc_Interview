@@ -1,5 +1,5 @@
 run-app:
-	python manage.py runserver
+	uv python manage.py runserver
 migrate:
 	python manage.py migrate
 makemigrations:
@@ -12,7 +12,7 @@ run-migrations:
 run-test:
 	uv run python manage.py test tests --keepdb
 
-run-runserver:
+run-server:
 	uv run python manage.py makemigrations
 	uv run python manage.py migrate
 	uv run gunicorn -c src/configs/gunicorn_config.py src.dj_project.wsgi

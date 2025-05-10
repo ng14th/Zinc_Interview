@@ -43,4 +43,4 @@ EXPOSE 5000
 
 # Start the app using Makefile target
 ENTRYPOINT ["make"]
-CMD ["run-app"]
+CMD ["run-server"]

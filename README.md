@@ -18,7 +18,7 @@
   + *Or change port in Makefile*
   
   
-- **Run gunicorn server** : ***run*** ``` make runserver ```
+- **Run gunicorn server** : ***run*** ``` make run-server ```
 - 
   + *Default server will be run on **<u>localhost:5000</u>***
   + *Change host/port in ENV GUNICORN_HOST/ GUNICORN_PORT*

@@ -49,16 +49,6 @@ jobs:
       - name: Run test
         run: |
           docker run -d --env-file .env --name zinc_app_container zinc_app:latest
-          echo "⏳ Waiting for container to become healthy or ready..."
-          for i in {1..30}; do
-            if docker exec zinc_app_container curl -f http://localhost:${{ secrets.ENV.GUNICORN_PORT }}/health/ > /dev/null 2>&1; then
-              echo "Container is ready!"
-              break
-            fi
-            echo "Waiting... ($i)"
-            sleep 2
-          done
-
           docker exec zinc_app_container make run-test
 
       - name: Run migrations
