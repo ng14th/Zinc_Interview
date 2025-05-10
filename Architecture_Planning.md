@@ -6,7 +6,8 @@
 ![alt text](image-2.png)
 
 ## 2. API & Data Model Sketch
-### 2.1. Import Sales
+### 2.1 API
+#### 2.1.1 Import Sales
 ```
 This api using for import sales data and save to database
 
@@ -29,7 +30,7 @@ Response : Status 201 Created
     }
 }
 ```
-### 2.2. Revenue
+#### 2.1.2 Revenue
 ```
 This api get total and average revenue sales in range start date and end date
 
@@ -54,11 +55,11 @@ Response : Status 200 OK
     }
 }
 ```
-### 2.3. Revenue Daily
+#### 2.1.3 Revenue Daily
 ```
 This api group by revenue by date in range start date and end date
 
-URL : http://{ip}:{port}/api/metrics/revenue/daily
+URL : http://{ip}:{port}/api/metrics/revenue/daily/
 Method : GET
 Param : 
  - start (date) : Month/Day/Year
@@ -67,7 +68,7 @@ Param :
 ```
 Example :
  
-curl --location 'http://{ip}:{port}/api/metrics/revenue/daily?start=3%2F1%2F2025&end=3%2F1%2F2025'
+curl --location 'http://{ip}:{port}/api/metrics/revenue/daily/?start=3%2F1%2F2025&end=3%2F1%2F2025'
 
 Response : Status 200 OK
 {
@@ -85,9 +86,37 @@ Response : Status 200 OK
     ]
 }
 ```
+#### 2.1.4 Health Check
+```
+This api for health check app with database
+
+URL : http://{ip}:{port}/health/
+Method : GET
+```
+```
+Example :
+ 
+curl --location 'http://{ip}:{port}/health'
+
+Response : Status 200 OK
+{
+    "status": "ok",
+    "database": "reachable",
+    "time": "2025-05-10T15:29:09.981364"
+}
+```
+### 2.2 Data Model
+#### 2.2.1 Table Sales
+- *Store order informations*
+
+  ![alt text](image-1.png)
+#### 2.2.2 Table SummarySalesByDate
+- *Store order informations such as sale_date, total_order, total_revenue and group by sale_date for speed up load report*
+
+  ![alt text](image-3.png)
 ## 3. Infrastructure Choices
 ### 3.1 Infrastructure
-- **Docker** – (containerization ) : ***Use in repository***
+- **Docker** – (containerization) : ***Use in repository***
 - **PostgreSQL** – (Main database) : ***Use in repository***
 - **GitHub Actions** – CI/CD (build, test, deploy) : ***Use in repository***
 - **Redis** – In-memory data store (cache)
@@ -186,6 +215,53 @@ The collected metrics are exported and visualized through Grafana, enabling real
 
 
 ### 6.3 SRE
-...
+- Monitor the number of requests over time and during peak hours to scale up application instances accordingly.
+  
+- Track the number of database and cache connections to determine whether to increase the connection limit or implement connection pooling.
+  
+- Observe the number of messages/tasks in the queue to trigger alerts and scale up the number of workers when necessary.
+  
+- Perform system health checks to send alerts and automatically restart services if issues are detected.
 
 ## 7. Trade-Off Discussion
+### Base on CAP theorem and User Experience ###
+
+### 7.1 API Import
+Recommended to use asynchronous task separation, such as Celery worker or Message Queues, to handle file processing. This allows the system to respond to the user immediately, avoiding screen blocking while waiting for the import API to complete. Notifications to the user can be sent via WebSocket.
+
+**Benefits:** 
+- Immediate response avoids wasting the user's time waiting for the API and prevents UI blocking. 
+- The task queue offloads work from the API and supports retries in case of failure.
+
+**Drawbacks:** 
+- Data is not available immediately, even though a 200 OK response has already been returned to the user.
+- Managing task retries in the queue can be complex.
+
+**Implementation:** Use Celery tasks with RabbitMQ in a 3-tier queue structure: main_queue, delay_queue, and dead-letter queue.
+
+### 7.2 API for Report
+For APIs that involve large-scale calculations of item counts and revenue, it is recommended to use Online Analytical Processing (OLAP) term. This approach precomputes necessary data periodically (e.g., T-1 day, T-30 minutes, T-1 hour) depending on the use case, reducing the load of real-time, read-heavy operations on the database. These computations should be handled via scheduled background jobs.
+
+**Benefits:**
+
+- Significantly faster API response times for reports
+
+- Reduces real-time computation load on the database when users frequently fetch data
+
+- Enables efficient sharding and clean aggregation of historical data
+
+**Drawbacks:**
+
+- Data consistency is delayed, as precomputed data may not reflect the latest state
+
+- Requires careful management of computation logic and scheduling intervals
+
+**Implementation:**
+Use Celery task workers to run background computations and provide two types of APIs:
+
+- A real-time API to show data for the current day (calculating on-the-fly with a fixed range like "today")
+
+- An analytical API to serve historical data from precomputed OLAP results
+
+**Example:**
+See api ver2 in the repository for implementation reference.

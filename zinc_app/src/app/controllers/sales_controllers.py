@@ -3,7 +3,7 @@ import io
 from datetime import datetime
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models import Sum, Count, F
-from src.app.models.sales import Sales
+from src.app.models.sales import Sales, SummarySalesByDate
 
 
 VALID_HEADER = [
@@ -110,5 +110,26 @@ def get_revenue_daily(start, end):
         .annotate(
             revenue_sgd=Sum('total_paid')
         )
+
+    return data
+
+
+def get_revenue_by_date_v2(start, end):
+    data = SummarySalesByDate.objects\
+        .filter(sale_date__range=[start, end])\
+        .aggregate(
+            total_revenue_sgd=Sum('total_revenue'),
+            average_order_value_sg=Sum('total_revenue') / Sum('total_orders')
+        )
+
+    data['average_order_value_sg'] = round(data['average_order_value_sg'], 2)
+    return data
+
+
+def get_revenue_daily_v2(start, end):
+    data = SummarySalesByDate.objects\
+        .filter(sale_date__range=[start, end])\
+        .order_by('sale_date')\
+        .values(date=F('sale_date'), revenue_sgd=F('total_revenue'))
 
     return data

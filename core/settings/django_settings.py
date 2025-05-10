@@ -25,17 +25,6 @@ class DjangoSetting(BaseSettings):
     # debug apps, will be append to INSTALLED_APPS
     DJANGO_DEBUG_APPS: List[str] = []
 
-    # django app utilities
-    DJANGO_ALLOW_ASYNC_UNSAFE: bool = False
-    DJANGO_EMAIL_BACKEND: str = 'django.core.mail.backends.smtp.EmailBackend'
-    DJANGO_EMAIL_HOSTS: str = 'mailhog'
-    DJANGO_EMAIL_PORT: int = 1025
-    DJANGO_DEFAULT_FROM_EMAIL: str = "chat_service <noreply@portal.sop-fpt.online>"
-
-    # django all-auth
-    DJANGO_ACCOUNT_ALLOW_REGISTRATION: bool = True
-    DJANGO_ACCOUNT_AUTHENTICATION_METHOD: str = 'username'
-
     #
     DJANGO_SECURE_PROXY_SSL_HEADER: Tuple[str, str] = (
         "HTTP_X_FORWARDED_PROTO", "https",)
@@ -46,3 +35,6 @@ class DjangoSetting(BaseSettings):
     DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS: bool = True
     DJANGO_SECURE_HSTS_PRELOAD: bool = True
     DJANGO_SECURE_CONTENT_TYPE_NOSNIFF: bool = True
+
+    TOKEN_DOCKER_HUB: str = ''
+    USER_DOCKER_HUB: str = ''

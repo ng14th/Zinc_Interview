@@ -1,1 +1,1 @@
-from .sales import Sales
+from .sales import Sales, SummarySalesByDate

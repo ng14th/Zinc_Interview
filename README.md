@@ -11,16 +11,16 @@
 
 ## Run App
 ***Run ``` cd zinc_app ``` first***
-- **Run app local** : ***run*** ``` make runserver ```
+- **Run app local** : ***run*** ``` make run-app ```
   
   + *Default app will be run on **<u>localhost:8000</u>***
   + *Change port by run command : ```python manange runserver {port}```*
   + *Or change port in Makefile*
   
   
-- **Run gunicorn app** : ***run*** ``` make run-app ```
+- **Run gunicorn server** : ***run*** ``` make runserver ```
 - 
-  + *Default app will be run on **<u>localhost:5000</u>***
+  + *Default server will be run on **<u>localhost:5000</u>***
   + *Change host/port in ENV GUNICORN_HOST/ GUNICORN_PORT*
   
 - **Run test case** : ***Must add file code pytest in folder test and run*** ``` make run-test ```

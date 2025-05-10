@@ -4,7 +4,6 @@ from rest_framework.permissions import AllowAny
 from django.db import connections, DatabaseError, OperationalError
 from django.db.utils import ConnectionDoesNotExist
 from rest_framework.response import Response
-from datetime import datetime
 
 
 def get_health_check_view():

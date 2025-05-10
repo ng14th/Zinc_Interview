@@ -44,3 +44,23 @@ class Sales(models.Model):
         default=0
     )
     payment_method = models.CharField(max_length=255)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['sale_date'])
+        ]
+
+
+class SummarySalesByDate(models.Model):
+    sale_date = models.DateField()
+    total_orders = models.IntegerField()
+    total_revenue = models.DecimalField(
+        max_digits=100,
+        decimal_places=5,
+        default=0
+    )
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['sale_date'])
+        ]
