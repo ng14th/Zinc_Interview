@@ -29,3 +29,6 @@
 ***At Zinc folder*** ***run*** ``` chmod +x ./scripts/* ```
 - **Build image** : ***run*** ``` ./scripts/build_image.sh ```
 - **Run container after build image success** : ***run*** ``` ./scripts/run_container.sh ```
+### For scaling default run on 2 repicas
+- **Run stack container after build image success** : ***run*** ``` ./scripts/run_stack_container.sh ```
+- **Scale up/down stack container** : ***run*** ``` ./scripts/scale_stack.sh ```

@@ -1,0 +1,46 @@
+services:
+  # Zinc App
+  zin_container:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # named image
+    image: nguyennt63/zinc_app:latest
+    # ports of container
+    ports:
+      - "5000:5000"
+    # select env
+    env_file:
+      - zinc_app/envs/.env
+
+    # command start container
+    working_dir: /app/zinc_app
+    entrypoint: ["make"]
+    command: ["run-server"]
+
+    # healthcheck
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:5000/health/"]
+      interval: 15s
+      timeout: 3s
+      retries: 5
+
+    # restart
+    restart: on-failure
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+
+    # volumes
+    volumes:
+      - ./zinc_app:/app/zinc_app
+      - /dev/null:/app/zinc_app/envs/.env  # Mask the env file inside the container
+
+volumes:
+  zinc_app_data:
+
+networks:
+  default:

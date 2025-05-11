@@ -5,7 +5,8 @@ NEW_IMAGE_NAME="nguyennt63/zinc_app:latest"
 OLD_IMAGE_NAME="nguyennt63/zinc_app:latest"
 BACKUP_IMAGE_NAME="nguyennt63/zinc_app:backup"
 
-CONTAINER_NAME="zinc_app_container"
+CONTAINER_NAME="zinc_container"
+STACK_NAME="zinc_app"
 ENV_FILE="zinc_app/envs/.env"
 
 # Get env variables
@@ -21,10 +22,13 @@ docker tag $OLD_IMAGE_NAME $BACKUP_IMAGE_NAME
 echo "Remove current image..."
 docker rmi $OLD_IMAGE_NAME
 
+echo "Stopping and removing old stack..."
+docker stack rm $STACK_NAME
+
 # Stop and remove old container if exists
 echo "Stopping and removing old container..."
-docker stop $CONTAINER_NAME 2>/dev/null
-docker rm $CONTAINER_NAME 2>/dev/null
+docker remove -f $CONTAINER_NAME
+docker compose down
 
 # Pull new image
 echo "Pulling new image... $NEW_IMAGE_NAME"
@@ -32,7 +36,8 @@ echo "$TOKEN_DOCKER_HUB" | docker login -u "$USER_DOCKER_HUB" --password-stdin &
 
 # Run new container
 echo "Starting new container..."
-docker run -d --restart=on-failure --env-file "$ENV_FILE" -p 5000:5000 --name $CONTAINER_NAME $NEW_IMAGE_NAME
+# docker run -d --restart=on-failure --env-file "$ENV_FILE" -p 5000:5000 --name $CONTAINER_NAME $NEW_IMAGE_NAME
+docker compose up -d
 
 # Wait a bit for container to boot and healthcheck to register
 echo "Waiting for container to initialize..."
@@ -51,7 +56,8 @@ if [[ "$HEALTH_STATUS" != *"starting"* ]]; then
 
   # Re-tag backup image and restart container
   docker tag $BACKUP_IMAGE_NAME $OLD_IMAGE_NAME
-  docker run -d --restart=on-failure --env-file "$ENV_FILE" -p 5000:5000 --name $CONTAINER_NAME $OLD_IMAGE_NAME
+  # docker run -d --restart=on-failure --env-file "$ENV_FILE" -p 5000:5000 --name $CONTAINER_NAME $OLD_IMAGE_NAME
+  docker compose up -d
 
   echo "✅ Rolled back to previous image."
 else
