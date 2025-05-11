@@ -126,7 +126,6 @@ Response : Status 200 OK
 - **Grafana** – (Monitoring / Dashboard visualization)
 - **OpenTelemetry – Observability framework** (trace, metrics, logs)
 ### 3.2 Framework
-- **Python**
 - **Django – Web framework (Python)**
 - **Gunicorn – Python WSGI HTTP server**
 - **Celery – Task queue (Python library)**
