@@ -6,7 +6,6 @@ from src.app.models.sales import SummarySalesByDate
 from src.app.controllers.sales_controllers import get_revenue_daily_v2, get_revenue_by_date_v2
 from src.app.serializers.sales_serializer import SalesSerializer
 
-
 class SalesMetricsViewSetV2(viewsets.ModelViewSet):
     queryset = SummarySalesByDate.objects.all()
     serializer_class = SalesSerializer

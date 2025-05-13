@@ -1,5 +1,5 @@
 run-app:
-	uv python manage.py runserver
+	python manage.py runserver
 migrate:
 	python manage.py migrate
 makemigrations:

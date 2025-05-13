@@ -24,6 +24,7 @@
   + *Change host/port in ENV GUNICORN_HOST/ GUNICORN_PORT*
   
 - **Run test case** : ***Must add file code pytest in folder test and run*** ``` make run-test ```
+- **API Swagger** : ``` http://{ip}:{port}/api/docs/ ```
 
 ## Docker
 ***At Zinc folder*** ***run*** ``` chmod +x ./scripts/* ```
