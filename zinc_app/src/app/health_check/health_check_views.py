@@ -4,6 +4,10 @@ from rest_framework.permissions import AllowAny
 from django.db import connections, DatabaseError, OperationalError
 from django.db.utils import ConnectionDoesNotExist
 from rest_framework.response import Response
+from logging import getLogger
+from core.constants.logger import CONSOLE_LOGGER
+
+logger = getLogger(CONSOLE_LOGGER)
 
 
 def get_health_check_view():
@@ -14,8 +18,12 @@ def get_health_check_view():
         try:
             default_conn = connections['default']
             cursor = default_conn.cursor()
-            cursor.execute("SELECT 1")
-            cursor.fetchone()
+            query = "SELECT 1"
+            logger.info(f"Executing query: {query}")
+            cursor.execute(query)
+            result = cursor.fetchone()
+            logger.info(f"Database query result: {result}")
+            logger.info("Database connection is healthy.")
 
             return Response(
                 {
