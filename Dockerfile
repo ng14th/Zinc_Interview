@@ -24,20 +24,19 @@ WORKDIR /app
 COPY pyproject.toml uv.lock* /app/
 
 # Create venv and sync dependencies with cache
-RUN --mount=type=cache,target=/root/.cache
+# RUN --mount=type=cache,target=/root/.cache
 
 # Copy project files
 COPY . /app/
 
 # Create venv and sync dependencies
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv venv && uv sync --frozen
+RUN uv venv && uv sync --frozen
 
 # Set working directory to your app
 WORKDIR /app/zinc_app
 
 # Healthcheck
-HEALTHCHECK --interval=15s --timeout=3s --retries=5 CMD curl --fail http://localhost:5000/health/ || exit 1
+# HEALTHCHECK --interval=15s --timeout=3s --retries=5 CMD curl --fail http://localhost:5000/health/ || exit 1
 
 EXPOSE 5000
 
