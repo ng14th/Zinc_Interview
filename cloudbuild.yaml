@@ -1,0 +1,31 @@
+steps:
+  # 1. Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', 'asia-southeast1-docker.pkg.dev/steady-bonsai-468315-i1/zinc-be-demo/zinc_demo:latest',
+      '.'
+    ]
+
+  # 2. Push Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'push',
+      'asia-southeast1-docker.pkg.dev/steady-bonsai-468315-i1/zinc-be-demo/zinc_demo:latest'
+    ]
+
+  # 3. Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: [
+      'run', 'deploy', 'test-demo-zinc',
+      '--image', 'asia-southeast1-docker.pkg.dev/steady-bonsai-468315-i1/zinc-be-demo/zinc_demo:latest',
+      '--platform', 'managed',
+      '--region', 'asia-southeast1',
+      '--allow-unauthenticated',
+      '--port', '5000',
+      '--add-cloudsql-instances', 'steady-bonsai-468315-i1:us-central1:postgresql-zinc-db-demo'
+    ]
+
+images:
+  - 'asia-southeast1-docker.pkg.dev/steady-bonsai-468315-i1/zinc-be-demo/zinc_demo:latest'
